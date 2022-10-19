@@ -6,7 +6,7 @@ import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
 
 const Container = styled.div`
-  padding: 0 10rem;
+  padding: 0 2rem;
 `;
 const PageHeader = styled.h1``;
 
