@@ -7,6 +7,7 @@ import { supabase } from "../../utils/supabaseClient";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/router";
+import DefaultErrorPage from "next/error";
 
 export type Image = {
   image_url: string;
@@ -66,7 +67,6 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
 
   const uploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
     setUploading(true);
-    console.log(event.target.files);
 
     if (!event.target.files || event.target.files.length === 0) {
       throw new Error("You must select an image to upload.");
@@ -82,6 +82,10 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
       router.replace(router.asPath);
     });
   };
+
+  if (!party[0]) {
+    return <DefaultErrorPage statusCode={404} withDarkMode={false} />;
+  }
 
   return (
     <>
