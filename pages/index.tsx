@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { KeyboardEvent } from "react";
 
 const Container = styled.div`
-  padding: 5rem 20rem;
+  padding: 5rem 5rem;
 `;
 const PageHeader = styled.h1``;
 
