@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
-import Authentication from "./components/Authentication";
+import Authentication from "../components/Authentication";
 import { Button } from "antd";
 import signOut from "../utils/signOut";
 
