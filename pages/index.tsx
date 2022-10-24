@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import styled from "styled-components";
 import { Button, Input, Row, Col } from "antd";
 import Link from "next/link";
@@ -9,7 +7,7 @@ import { useRouter } from "next/router";
 import { KeyboardEvent } from "react";
 
 const Container = styled.div`
-  padding: 0 20rem;
+  padding: 5rem 20rem;
 `;
 const PageHeader = styled.h1``;
 
@@ -37,7 +35,6 @@ const Home: NextPage = () => {
       <Row justify="center">
         <PageHeader>Pool The Party</PageHeader>
       </Row>
-
       <StyledRow justify="center">
         <Col>
           <StyledRow justify="center">
@@ -49,7 +46,6 @@ const Home: NextPage = () => {
         </Col>
       </StyledRow>
       <StyledRow justify="center">Or</StyledRow>
-
       <StyledRow justify="center">
         <Link href={"/create-party"}>
           <Button>Create a party</Button>
