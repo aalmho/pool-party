@@ -15,7 +15,7 @@ const Authentication: FC<AuthenticationProps> = (props) => {
   const session = useSession();
   if (!session) {
     return (
-      <div style={{ padding: "5rem 20rem" }}>
+      <div style={{ padding: "5rem 5rem" }}>
         <Row justify="center">
           <Button onClick={() => signIn(supabaseClient)}>
             Sign in with google
