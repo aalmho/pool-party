@@ -39,7 +39,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { data } = await supabase
     .from("parties")
     .select("name, id, images(image_url, image_text, created_at)")
-    .eq("party_id", context.params?.id);
+    .eq("party_id", context.params?.id)
+    .single();
 
   const party: Party = await JSON.parse(JSON.stringify(data));
 
@@ -47,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 interface PartyPageProps {
-  party: Party[];
+  party: Party;
 }
 
 const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
@@ -71,29 +72,30 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
     if (!event.target.files || event.target.files.length === 0) {
       throw new Error("You must select an image to upload.");
     }
+
     const file = event.target.files[0];
     const fileExt = file.name.split(".").pop();
     const fileName = file.name.substring(0, file.name.indexOf("."));
     const generatedFileName = `${fileName}${Math.random()}.${fileExt}`;
 
     await supabase.storage.from("images").upload(generatedFileName, file);
-    insertImageReference(generatedFileName, party[0].id).then(() => {
+    insertImageReference(generatedFileName, party.id).then(() => {
       setUploading(false);
       router.replace(router.asPath);
     });
   };
 
-  if (!party[0]) {
+  if (!party) {
     return <DefaultErrorPage statusCode={404} withDarkMode={false} />;
   }
 
   return (
     <>
       <Head>
-        <title>{party[0].name}</title>
+        <title>{party.name}</title>
       </Head>
       <Row justify="center">
-        <h1>{party[0].name}</h1>
+        <h1>{party.name}</h1>
       </Row>
       <Row justify="center" style={{ marginBottom: "2rem" }}>
         <UploadButton htmlFor="single">
@@ -109,7 +111,7 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
         />
       </Row>
       <Row justify="center">
-        {party[0].images
+        {party.images
           ?.sort(
             (a: Image, b: Image) =>
               new Date(b.created_at).getTime() -

@@ -15,8 +15,6 @@ const PageHeader = styled.h1``;
 
 const PageText = styled.h2``;
 
-const CodeText = styled.h3``;
-
 const StyledRow = styled(Row)`
   margin: 2rem;
 `;
@@ -39,6 +37,7 @@ const Home: NextPage = () => {
       <Row justify="center">
         <PageHeader>Pool The Party</PageHeader>
       </Row>
+
       <StyledRow justify="center">
         <Col>
           <StyledRow justify="center">
