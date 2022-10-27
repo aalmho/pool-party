@@ -7,18 +7,30 @@ import { useState } from "react";
 import Authentication from "../components/Authentication";
 import { Button } from "antd";
 import signOut from "../utils/signOut";
+import { useRouter } from "next/router";
+import MenuHeader from "../components/MenuHeader";
+
+const publicPages = ["/", "/party/[id]"];
 
 function MyApp({
   Component,
   pageProps,
 }: AppProps<{ initialSession: Session }>) {
+  const router = useRouter();
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+
+  const isPublicPage = publicPages.includes(router.pathname);
+
   return (
     <SessionContextProvider supabaseClient={supabaseClient}>
-      <Authentication supabaseClient={supabaseClient}>
-        <Button onClick={() => signOut(supabaseClient)}>Log out</Button>
+      <MenuHeader supabaseClient={supabaseClient} />
+      {isPublicPage ? (
         <Component {...pageProps} />
-      </Authentication>
+      ) : (
+        <Authentication supabaseClient={supabaseClient}>
+          <Component {...pageProps} />
+        </Authentication>
+      )}
     </SessionContextProvider>
   );
 }
