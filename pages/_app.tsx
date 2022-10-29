@@ -6,7 +6,7 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import Authentication from "../components/Authentication";
 import { Button } from "antd";
-import signOut from "../utils/signOut";
+import MenuHeader from "../components/MenuHeader";
 
 function MyApp({
   Component,
@@ -16,7 +16,7 @@ function MyApp({
   return (
     <SessionContextProvider supabaseClient={supabaseClient}>
       <Authentication supabaseClient={supabaseClient}>
-        <Button onClick={() => signOut(supabaseClient)}>Log out</Button>
+        <MenuHeader supabaseClient={supabaseClient} />
         <Component {...pageProps} />
       </Authentication>
     </SessionContextProvider>

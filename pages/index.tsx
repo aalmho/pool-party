@@ -2,26 +2,24 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styled from "styled-components";
 import { Button, Input, Row, Col } from "antd";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { KeyboardEvent } from "react";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 
 const Container = styled.div`
   padding: 5rem 5rem;
 `;
-const PageHeader = styled.h1``;
 
 const PageText = styled.h2``;
 
 const StyledRow = styled(Row)`
-  margin: 2rem;
+  margin-bottom: 2rem;
 `;
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const goToPartyRoute = (e: KeyboardEvent<HTMLInputElement>) => {
-    const value = (e.target as HTMLInputElement).value;
-    router.push("/party/" + value);
+  const [partyCode, setPartyCode] = useState<ChangeEvent<HTMLInputElement>>();
+  const goToPartyRoute = () => {
+    router.push("/party/" + partyCode?.target.value);
   };
 
   return (
@@ -32,24 +30,21 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Row justify="center">
-        <PageHeader>Pool The Party</PageHeader>
-      </Row>
       <StyledRow justify="center">
         <Col>
           <StyledRow justify="center">
-            <PageText>Join a pool</PageText>
+            <PageText>Join a party</PageText>
           </StyledRow>
           <StyledRow justify="center">
-            <Input onPressEnter={(e) => goToPartyRoute(e)} />
+            <label>
+              partycode
+              <Input id="partycode" onChange={(e) => setPartyCode(e)} />
+            </label>
+          </StyledRow>
+          <StyledRow justify="center">
+            <Button onClick={() => goToPartyRoute()}>Enter</Button>
           </StyledRow>
         </Col>
-      </StyledRow>
-      <StyledRow justify="center">Or</StyledRow>
-      <StyledRow justify="center">
-        <Link href={"/create-party"}>
-          <Button>Create a party</Button>
-        </Link>
       </StyledRow>
     </Container>
   );
