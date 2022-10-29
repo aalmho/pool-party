@@ -50,25 +50,29 @@ const CreateParty: NextPage = () => {
   };
 
   return (
-    <Container>
-      <Head>
-        <title>Create a party</title>
-      </Head>
-      <Row justify="center">
-        <PageHeader>Create A Party</PageHeader>
-      </Row>
-      <Form form={form} onFinish={onFinnish}>
-        <StyledRow justify="center">Name your party</StyledRow>
-        <StyledRow justify="center">
-          <Form.Item name="partyName" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-        </StyledRow>
-        <StyledRow justify="center">
-          <Button htmlType="submit">Start pooling</Button>
-        </StyledRow>
-      </Form>
-    </Container>
+    <>
+      {session && (
+        <Container>
+          <Head>
+            <title>Create a party</title>
+          </Head>
+          <Row justify="center">
+            <PageHeader>Create A Party</PageHeader>
+          </Row>
+          <Form form={form} onFinish={onFinnish}>
+            <StyledRow justify="center">Name your party</StyledRow>
+            <StyledRow justify="center">
+              <Form.Item name="partyName" rules={[{ required: true }]}>
+                <Input />
+              </Form.Item>
+            </StyledRow>
+            <StyledRow justify="center">
+              <Button htmlType="submit">Start pooling</Button>
+            </StyledRow>
+          </Form>
+        </Container>
+      )}
+    </>
   );
 };
 
