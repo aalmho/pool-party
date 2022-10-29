@@ -15,7 +15,7 @@ const MenuHeader: FC<MenuHeaderProps> = (props) => {
   const { supabaseClient } = props;
   const session = useSession();
   const logout = <div onClick={() => signOut(supabaseClient)}>Log Out</div>;
-  const signedInItems: MenuProps["items"] = [
+  const menuItems: MenuProps["items"] = [
     {
       label: <Link href={"/"}>Pool The Party</Link>,
       key: "frontpage",
@@ -28,21 +28,14 @@ const MenuHeader: FC<MenuHeaderProps> = (props) => {
       label: <Link href={"create-party"}>Create party</Link>,
       key: "createparty",
     },
-    { label: logout, key: "logout" },
   ];
-  const signedOutItems: MenuProps["items"] = [
-    {
-      label: <Link href={"/"}>Pool The Party</Link>,
-      key: "frontpage",
-    },
-  ];
+  if (session) {
+    menuItems.push({ label: logout, key: "logout" });
+  }
   return (
     <Layout>
       <Header style={{ background: "#fff" }}>
-        <Menu
-          items={session ? signedInItems : signedOutItems}
-          mode={"horizontal"}
-        />
+        <Menu items={menuItems} mode={"horizontal"} />
       </Header>
     </Layout>
   );
