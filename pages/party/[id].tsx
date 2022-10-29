@@ -1,6 +1,6 @@
 import type { NextPage, GetServerSideProps } from "next";
-import { Row, Col, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Row, Col } from "antd";
+import { HeartOutlined, HeartFilled, DeleteFilled } from "@ant-design/icons";
 import styled from "styled-components";
 import Head from "next/head";
 import { supabase } from "../../utils/supabaseClient";
@@ -8,23 +8,37 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
+import { useSession } from "@supabase/auth-helpers-react";
+import { Party, PartyImage } from "../../types";
 
-export type Image = {
-  image_url: string;
-  image_text: string;
-  created_at: Date;
-};
+const StyledImage = styled(Image)`
+  opacity: 1;
+  transition: 0.5s ease;
+`;
 
-export type Party = {
-  name: string;
-  id: string;
-  images: Image[];
-};
+const Middle = styled.div`
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+`;
 
-const StyledImage = styled.div`
+const ImageContainer = styled.div`
   width: 195px;
   height: 195px;
   border: solid 1px white;
+  position: relative;
+  :hover {
+    ${StyledImage} {
+      opacity: 0.6;
+    }
+    ${Middle} {
+      opacity: 1;
+    }
+  }
 `;
 
 const UploadButton = styled.label`
@@ -38,7 +52,7 @@ const UploadButton = styled.label`
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { data } = await supabase
     .from("parties")
-    .select("name, id, images(image_url, image_text, created_at)")
+    .select("name, id, user_id, images(id, image_url, image_text, created_at)")
     .eq("party_id", context.params?.id)
     .single();
 
@@ -54,6 +68,7 @@ interface PartyPageProps {
 const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
+  const session = useSession();
 
   const insertImageReference = async (fileName: string, imageFK: string) => {
     const imagePath = "/storage/v1/object/public/images/";
@@ -64,6 +79,11 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
       party_id: imageFK,
       image_url: publicUrl,
     });
+  };
+
+  const deleteImage = async (imageId: string) => {
+    await supabase.from("images").delete().eq("id", imageId);
+    router.replace(router.asPath);
   };
 
   const uploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +104,8 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
       router.replace(router.asPath);
     });
   };
+
+  const isPartyOwner = party?.user_id === session?.user.id;
 
   if (!party) {
     return <DefaultErrorPage statusCode={404} withDarkMode={false} />;
@@ -113,14 +135,14 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
       <Row justify="center">
         {party.images
           ?.sort(
-            (a: Image, b: Image) =>
+            (a: PartyImage, b: PartyImage) =>
               new Date(b.created_at).getTime() -
               new Date(a.created_at).getTime()
           )
-          .map((img: Image) => (
+          .map((img: PartyImage) => (
             <Col key={img.image_text}>
-              <StyledImage>
-                <Image
+              <ImageContainer>
+                <StyledImage
                   src={img.image_url}
                   alt=""
                   width={300}
@@ -128,7 +150,13 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
                   layout="responsive"
                   style={{ border: "solid 1px white" }}
                 />
-              </StyledImage>
+                <Middle>
+                  <HeartOutlined />
+                  {isPartyOwner && (
+                    <DeleteFilled onClick={() => deleteImage(img.id)} />
+                  )}
+                </Middle>
+              </ImageContainer>
             </Col>
           ))}
       </Row>

@@ -1,7 +1,8 @@
 import { User, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { Row } from "antd";
 import { NextPage } from "next";
-import { Party } from "./party/[id]";
+import Link from "next/link";
+import { Party } from "../types";
 
 export const getServerSideProps = withPageAuth({
   redirectTo: "/login",
@@ -12,7 +13,7 @@ export const getServerSideProps = withPageAuth({
 
     const { data } = await supabase
       .from("parties")
-      .select("name, id, images(image_url, image_text, created_at)")
+      .select("name, id, party_id, images(image_url, image_text, created_at)")
       .eq("user_id", user?.id);
 
     const parties: Party[] = await JSON.parse(JSON.stringify(data));
@@ -25,10 +26,11 @@ interface MyPartiesPageProps {
   parties: Party[];
   user: User;
 }
+
 const MyPartiesPage: NextPage<MyPartiesPageProps> = ({ parties, user }) => {
   const partiesRow = parties.map((party: Party) => (
     <Row key={party.name} justify="center">
-      {party.name}
+      <Link href={`/party/${party.party_id}`}>{party.name}</Link>
     </Row>
   ));
   return (

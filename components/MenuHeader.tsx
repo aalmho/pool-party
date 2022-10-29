@@ -21,11 +21,11 @@ const MenuHeader: FC<MenuHeaderProps> = (props) => {
       key: "frontpage",
     },
     {
-      label: <Link href={"my-parties"}>My parties</Link>,
+      label: <Link href={"/my-parties"}>My parties</Link>,
       key: "parties",
     },
     {
-      label: <Link href={"create-party"}>Create party</Link>,
+      label: <Link href={"/create-party"}>Create party</Link>,
       key: "createparty",
     },
   ];
