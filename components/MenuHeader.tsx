@@ -15,7 +15,6 @@ const MenuHeader: FC<MenuHeaderProps> = (props) => {
   const { supabaseClient } = props;
   const session = useSession();
   const logout = <div onClick={() => signOut(supabaseClient)}>Log Out</div>;
-  const login = <Link href={"/login"}>Log In</Link>;
   const signedInItems: MenuProps["items"] = [
     {
       label: <Link href={"/"}>Pool The Party</Link>,
@@ -36,7 +35,6 @@ const MenuHeader: FC<MenuHeaderProps> = (props) => {
       label: <Link href={"/"}>Pool The Party</Link>,
       key: "frontpage",
     },
-    { label: login, key: "login" },
   ];
   return (
     <Layout>
