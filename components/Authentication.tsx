@@ -7,9 +7,13 @@ import { useRouter } from "next/router";
 
 interface AuthenticationProps {
   supabaseClient: SupabaseClient;
+  children?: React.ReactNode;
 }
 
-const Authentication: FC<AuthenticationProps> = ({ supabaseClient }) => {
+const Authentication: FC<AuthenticationProps> = ({
+  supabaseClient,
+  children,
+}) => {
   const session = useSession();
   const router = useRouter();
   useEffect(() => {
@@ -17,15 +21,18 @@ const Authentication: FC<AuthenticationProps> = ({ supabaseClient }) => {
       router.push("/");
     }
   });
-  return (
-    <div style={{ padding: "5rem 5rem" }}>
-      <Auth
-        supabaseClient={supabaseClient}
-        appearance={{ theme: ThemeSupa }}
-        providers={["google", "facebook"]}
-      />
-    </div>
-  );
+  if (!session) {
+    return (
+      <div style={{ padding: "5rem 5rem" }}>
+        <Auth
+          supabaseClient={supabaseClient}
+          appearance={{ theme: ThemeSupa }}
+          providers={["google", "facebook"]}
+        />
+      </div>
+    );
+  }
+  return <>{children}</>;
 };
 
 export default Authentication;
