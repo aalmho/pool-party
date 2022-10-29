@@ -27,7 +27,9 @@ interface MyPartiesPageProps {
 }
 const MyPartiesPage: NextPage<MyPartiesPageProps> = ({ parties, user }) => {
   const partiesRow = parties.map((party: Party) => (
-    <Row justify="center">{party.name}</Row>
+    <Row key={party.name} justify="center">
+      {party.name}
+    </Row>
   ));
   return (
     <div>
