@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
-import Authentication from "../components/Authentication";
+import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 import { useRouter } from "next/router";
 import MenuHeader from "../components/MenuHeader";
 
@@ -25,9 +25,13 @@ function MyApp({
       {isPublicPage ? (
         <Component {...pageProps} />
       ) : (
-        <Authentication supabaseClient={supabaseClient}>
+        <Auth
+          supabaseClient={supabaseClient}
+          appearance={{ theme: ThemeSupa }}
+          providers={["google", "facebook"]}
+        >
           <Component {...pageProps} />
-        </Authentication>
+        </Auth>
       )}
     </SessionContextProvider>
   );
