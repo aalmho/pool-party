@@ -21,7 +21,7 @@ const UploadButton = styled.label`
   background-color: blue;
   color: white;
   padding: 0.6rem;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
 `;
 

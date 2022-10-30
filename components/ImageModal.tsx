@@ -39,7 +39,7 @@ const ImageModal: FC<ImageModalProps> = ({
   return (
     <StyledModal
       footer={[
-        <div>
+        <div key="likeanddelete">
           <HeartOutlined />
           {isPartyOwner && (
             <DeleteFilled onClick={() => deleteImage(image!.id)} />
@@ -49,7 +49,7 @@ const ImageModal: FC<ImageModalProps> = ({
       open={isModalOpen}
       onCancel={() => setIsModalOpen(false)}
     >
-      <Image src={image?.image_url!} height={2400} width={2400} />
+      <Image alt="" src={image?.image_url!} height={2400} width={2400} />
     </StyledModal>
   );
 };
