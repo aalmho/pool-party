@@ -1,6 +1,5 @@
 import type { NextPage, GetServerSideProps } from "next";
 import { Row, Col } from "antd";
-import { HeartOutlined, HeartFilled, DeleteFilled } from "@ant-design/icons";
 import styled from "styled-components";
 import Head from "next/head";
 import { supabase } from "../../utils/supabaseClient";
@@ -10,42 +9,19 @@ import { useRouter } from "next/router";
 import DefaultErrorPage from "next/error";
 import { useSession } from "@supabase/auth-helpers-react";
 import { Party, PartyImage } from "../../types";
-
-const StyledImage = styled(Image)`
-  opacity: 1;
-  transition: 0.5s ease;
-`;
-
-const Middle = styled.div`
-  transition: 0.5s ease;
-  opacity: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-`;
+import ImageModal from "../../components/ImageModal";
 
 const ImageContainer = styled.div`
   width: 195px;
   height: 195px;
   border: solid 1px white;
-  position: relative;
-  :hover {
-    ${StyledImage} {
-      opacity: 0.6;
-    }
-    ${Middle} {
-      opacity: 1;
-    }
-  }
 `;
 
 const UploadButton = styled.label`
   background-color: blue;
   color: white;
   padding: 0.6rem;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
 `;
 
@@ -69,6 +45,8 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
   const session = useSession();
+  const [selectedImage, setSelectedImage] = useState<PartyImage>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const insertImageReference = async (fileName: string, imageFK: string) => {
     const imagePath = "/storage/v1/object/public/images/";
@@ -79,11 +57,6 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
       party_id: imageFK,
       image_url: publicUrl,
     });
-  };
-
-  const deleteImage = async (imageId: string) => {
-    await supabase.from("images").delete().eq("id", imageId);
-    router.replace(router.asPath);
   };
 
   const uploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -103,6 +76,11 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
       setUploading(false);
       router.replace(router.asPath);
     });
+  };
+
+  const openImage = (selctedImage: PartyImage) => {
+    setIsModalOpen(true);
+    setSelectedImage(selctedImage);
   };
 
   const isPartyOwner = party?.user_id === session?.user.id;
@@ -141,25 +119,25 @@ const PartyPage: NextPage<PartyPageProps> = ({ party }) => {
           )
           .map((img: PartyImage) => (
             <Col key={img.image_text}>
-              <ImageContainer>
-                <StyledImage
+              <ImageContainer onClick={() => openImage(img)}>
+                <Image
                   src={img.image_url}
                   alt=""
-                  width={300}
-                  height={300}
+                  width={2400}
+                  height={2400}
                   layout="responsive"
                   style={{ border: "solid 1px white" }}
                 />
-                <Middle>
-                  <HeartOutlined />
-                  {isPartyOwner && (
-                    <DeleteFilled onClick={() => deleteImage(img.id)} />
-                  )}
-                </Middle>
               </ImageContainer>
             </Col>
           ))}
       </Row>
+      <ImageModal
+        image={selectedImage!}
+        isPartyOwner={isPartyOwner}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
     </>
   );
 };
