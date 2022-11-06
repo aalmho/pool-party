@@ -1,15 +1,23 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styled from "styled-components";
-import { Button, Input, Row, Col } from "antd";
+import { Divider, Input, Row, Col } from "antd";
 import { useRouter } from "next/router";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { KeyboardEvent } from "react";
 
 const Container = styled.div`
-  padding: 5rem 5rem;
+  position: absolute;
+  top: 20%;
+  padding: 0 20px;
+  width: 100%;
 `;
 
-const PageText = styled.h2``;
+const StyledInput = styled(Input)`
+  border: none;
+  background: #eeeeee;
+  border-radius: 50px;
+  height: 50px;
+`;
 
 const StyledRow = styled(Row)`
   margin-bottom: 2rem;
@@ -17,11 +25,10 @@ const StyledRow = styled(Row)`
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [partyCode, setPartyCode] = useState<ChangeEvent<HTMLInputElement>>();
-  const goToPartyRoute = () => {
-    router.push("/party/" + partyCode?.target.value);
+  const goToPartyRoute = (e: KeyboardEvent<HTMLInputElement>) => {
+    const value = (e.target as HTMLInputElement).value;
+    router.push("/party/" + value);
   };
-
   return (
     <Container>
       <Head>
@@ -31,19 +38,22 @@ const Home: NextPage = () => {
       </Head>
 
       <StyledRow justify="center">
-        <Col>
+        <Col style={{ width: "100%" }}>
+          <Row justify="center">
+            <h1>Join</h1>
+          </Row>
+          <Row style={{ marginBottom: "70px" }} justify="center">
+            The party starts and ends here
+          </Row>
           <StyledRow justify="center">
-            <PageText>Join a party</PageText>
+            <StyledInput
+              placeholder="Enter party code"
+              id="partycode"
+              onPressEnter={(e) => goToPartyRoute(e)}
+            />
           </StyledRow>
-          <StyledRow justify="center">
-            <label>
-              partycode
-              <Input id="partycode" onChange={(e) => setPartyCode(e)} />
-            </label>
-          </StyledRow>
-          <StyledRow justify="center">
-            <Button onClick={() => goToPartyRoute()}>Enter</Button>
-          </StyledRow>
+          <Divider plain>Or</Divider>
+          <Row justify="center">QR code</Row>
         </Col>
       </StyledRow>
     </Container>
