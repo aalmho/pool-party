@@ -19,6 +19,10 @@ const StyledModal = styled(Modal)`
   }
 `;
 
+const StyledImage = styled(Image)`
+  border-radius: 20px;
+`;
+
 interface ImageModalProps {
   image: PartyImage;
   isPartyOwner: boolean;
@@ -49,7 +53,7 @@ const ImageModal: FC<ImageModalProps> = ({
       open={isModalOpen}
       onCancel={() => setIsModalOpen(false)}
     >
-      <Image alt="" src={image?.image_url!} height={2400} width={2400} />
+      <StyledImage alt="" src={image?.image_url!} height={2400} width={2400} />
     </StyledModal>
   );
 };

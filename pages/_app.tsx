@@ -6,9 +6,29 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import Authentication from "../components/Authentication";
 import { useRouter } from "next/router";
-import MenuHeader from "../components/MenuHeader";
+import Navigation from "../components/Navigation";
+import styled from "styled-components";
 
 const publicPages = ["/", "/party/[id]"];
+const Wrapper = styled.div`
+  height: 100vh;
+  background: radial-gradient(
+      circle at 1% 15%,
+      rgba(255, 0, 0, 0.3),
+      rgba(255, 0, 0, 0) 30.71%
+    ),
+    radial-gradient(
+      circle at 6.7% 95%,
+      rgba(0, 0, 255, 0.3),
+      rgba(0, 0, 255, 0) 20.71%
+    ),
+    radial-gradient(
+        circle at 93.3% 75%,
+        rgba(0, 255, 0, 0.3),
+        rgba(0, 255, 0, 0) 20.71%
+      )
+      #fbfcfa;
+`;
 
 function MyApp({
   Component,
@@ -20,14 +40,16 @@ function MyApp({
   const isPublicPage = publicPages.includes(router.pathname);
   return (
     <SessionContextProvider supabaseClient={supabaseClient}>
-      <MenuHeader supabaseClient={supabaseClient} />
-      {isPublicPage ? (
-        <Component {...pageProps} />
-      ) : (
-        <Authentication supabaseClient={supabaseClient}>
+      <Navigation supabaseClient={supabaseClient} />
+      <Wrapper>
+        {isPublicPage ? (
           <Component {...pageProps} />
-        </Authentication>
-      )}
+        ) : (
+          <Authentication supabaseClient={supabaseClient}>
+            <Component {...pageProps} />
+          </Authentication>
+        )}
+      </Wrapper>
     </SessionContextProvider>
   );
 }
